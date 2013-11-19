@@ -6,6 +6,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import storm.trident.TridentTopology;
+import storm.trident.operation.BaseFilter;
 import storm.trident.operation.BaseFunction;
 import storm.trident.operation.TridentCollector;
 import storm.trident.tuple.TridentTuple;
@@ -19,10 +20,11 @@ public class TemplateTridentTopology {
         }
     }
 
-    private static class Print extends BaseFunction {
+    private static class PrintFilter extends BaseFilter {
         @Override
-        public void execute(TridentTuple tuple, TridentCollector collector) {
+        public boolean isKeep(TridentTuple tuple) {
             System.out.println(String.format("--- %s ---", tuple.getString(0)));
+            return false;
         }
     }
 
@@ -31,7 +33,7 @@ public class TemplateTridentTopology {
         topology.newStream("spout1", new TestWordSpout())
                 .each(new Fields("word"), new Exclamation(), new Fields("first_exclaim"))
                 .each(new Fields("first_exclaim"), new Exclamation(), new Fields("second_exclaim"))
-                .each(new Fields("second_exclaim"), new Print(), new Fields("output"));
+                .each(new Fields("second_exclaim"), new PrintFilter());
 
         Config conf = new Config();
         conf.setDebug(true);
