@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'fatjar'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
+  }
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo url: "http://clojars.org/repo/"
+}
+
+
+dependencies{
+    compile (
+            'storm:storm:0.8.2',
+    )
+    testCompile (
+            'junit:junit:4.11',
+            'org.mockito:mockito-all:1.9.5',
+    )
+}
+
+fatJar {
+    exclude 'META-INF/*.DSA'
+}
+

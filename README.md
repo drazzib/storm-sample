@@ -1,4 +1,4 @@
-storm-sample
-============
+hadoop-sample
+=============
 
-Storm samples
+hadoop-sample
